@@ -23,21 +23,25 @@ class CartSerializer(serializers.ModelSerializer):
          model = Cart
          fields = ["id", "items", "total"]
 
-class OrderSerializer(serializers.ModelSerializer):
-    items = ProductSerializer(read_only = True)
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
     subtotal = serializers.ReadOnlyField()
-    
+
     class Meta:
         model = OrderItem
-        fields = ["id", "product", "quantity", "price", "subtotal","payment_status", "stripe_session_id"]
+        fields = ["id", "product", "quantity", "price", "subtotal"]
 
-class Order(serializers.ModelSerializer):
-    items = OrderSerializer(many = True , read_only = True)
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Order
-        fields = ["id", "status", "total_price", "shipping_address", "items", "created_at"]
-        read_only_fields = ["id", "status", "total_price", "created_at"]
+        fields = [
+            "id", "status", "payment_status", "stripe_session_id",
+            "total_price", "shipping_address", "items", "created_at"
+        ]
+        read_only_fields = ["id", "status", "payment_status", "stripe_session_id", "total_price", "created_at"]
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):

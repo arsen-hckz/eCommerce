@@ -89,10 +89,14 @@ class CreateOrderView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
+        print("User:", request.user)
+        print("User ID:", request.user.id)
         cart = Cart.objects.filter(user=request.user).first()
-
+        print("Cart:", cart)
+        print("Cart items:", cart.items.all() if cart else "No cart")
+    
         if not cart or not cart.items.exists():
-            return Response({"error": "Your cart is empty"}, status=400)
+          return Response({"error": "Your cart is empty"}, status=400)
 
         serializer = CreateOrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -101,8 +105,8 @@ class CreateOrderView(APIView):
         order = Order.objects.create(
             user=request.user,
             total_price=cart.total,
-            shipping_address=serializer.validated_data["shipping_address",""]
-        )
+            shipping_address=serializer.validated_data.get("shipping_address",""))
+        
 
         # create order items from cart items
         for cart_item in cart.items.all():
@@ -200,3 +204,17 @@ def stripe_webhook(request):
             pass
 
     return HttpResponse(status=200)
+
+class UpdateOrderView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, pk):
+        try:
+            order = Order.objects.get(id=pk, user=request.user)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"}, status=404)
+        shipping_address = request.data.get("shipping_address")
+        if shipping_address:
+            order.shipping_address = shipping_address
+            order.save()
+        return Response(OrderSerializer(order).data)
