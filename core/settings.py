@@ -4,6 +4,7 @@ import os
 import stripe 
 import dj_database_url
 import sys
+import cloudinary
 
 
 xo = 0
@@ -29,6 +30,8 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 LOCAL_APPS = [
@@ -158,3 +161,11 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.railway.app",
     "https://*.vercel.app",
 ]
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
