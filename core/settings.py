@@ -135,8 +135,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
 }
 
-# CORS — allows React frontend to talk to this API
-CORS_ALLOW_ALL_ORIGINS = True  # we'll restrict this in production
+
 
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
@@ -150,4 +149,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    os.getenv("FRONTEND_URL", ""),]
+    "https://ecommercefrontend-eight-gilt.vercel.app",
+]
+
+CORS_ALLOW_CREDENTIALS = True
