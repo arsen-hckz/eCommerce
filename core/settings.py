@@ -153,3 +153,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://ecommercebackend-production-3cf2.up.railway.app",
+    "https://ecommercefrontend-eight-gilt.vercel.app",
+]
